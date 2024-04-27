@@ -2,6 +2,7 @@ const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 canvas.width=800;
 canvas.height=window.innerHeight;
+
 class Player{
     constructor(){
         this.width=50;
@@ -16,8 +17,8 @@ class Player{
         ctx.fillStyle='green';
         ctx.fillRect(this.x,this.y,this.width,this.height);
     }
-
 }
+
 let player=new Player();
 class Bullet{
     constructor(){
@@ -44,6 +45,7 @@ let previousTime=performance.now();
 let moveDirection="";
 let bulletArr=[]
 let widthLimit=canvas.width-player.width;
+let heightLimit=canvas.height - player.height;
 
 function update(currentTime){
     currentTime=performance.now();
@@ -62,6 +64,11 @@ function update(currentTime){
 }
 
 requestAnimationFrame(update);
+
+
+
+
+
 window.addEventListener("keydown",function(e){
     console.log(e);
     if(e.code=="ArrowLeft" || e.code=="ArrowRight" || e.code=="ArrowUp" || e.code=="ArrowDown"){
@@ -94,12 +101,20 @@ function playerMove(move){
         if((player.x + player.speed*deltaTime) < widthLimit){
             player.x+=player.speed*deltaTime;
         }else{
-            player.x=canvas.width-player.width;
+            player.x=widthLimit;
         }
     }else if(move=="ArrowUp"){
-        player.y-=player.speed*deltaTime;
+        if(player.y-player.speed*deltaTime > 0){
+            player.y-=player.speed*deltaTime;
+        }else{
+            player.y=0;
+        }
     }else if(move=="ArrowDown"){
-        player.y+=player.speed*deltaTime;
+        if((player.y + player.speed*deltaTime) < heightLimit){
+            player.y+=player.speed*deltaTime;
+        }else{
+            player.y=heightLimit;
+        }
     }
 }
 
@@ -107,3 +122,6 @@ function playerMove(move){
 function onCrash(player,object){
 
 }
+
+
+
