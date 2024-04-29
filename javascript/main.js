@@ -42,6 +42,7 @@ class Bullet {
 
 
 
+/////////////////////////////////////변수 선언////////////////////////////////////////////////
 let deltaTime;
 let previousTime = performance.now();
 let moveDirection = "";
@@ -75,6 +76,9 @@ function update(currentTime) {
 }
 
 requestAnimationFrame(update);
+
+
+
 
 window.addEventListener("keydown", function (e) {
   if (e.code == "ArrowLeft") {
