@@ -128,26 +128,27 @@ function playerMove() {
 }
 
 
-function onCrash(player, object) {
-  let player_x = player.x + player.width;
-  let object_x = object.x + object.width;
-  let player_y = player.y + player.height;
-  let object_y = object.y + object.height;
-  if (player.x < object_x && player_x > object.x) {
-    // 플레이러아 오브젝트가 부딪칠시 플레이어의 hp - 오브젝트의 공격력
-    if (player.y < object_y && player_y > object.y) {
-      player.hp -= object.attack;
-      invincibility = true;
-      setTimeout(() => { invincibility = false; }, 1000);
-    }
-  }
-}
+// function onCrash(player, object) {
+//   let player_x = player.x + player.width;
+//   let object_x = object.x + object.width;
+//   let player_y = player.y + player.height;
+//   let object_y = object.y + object.height;
+//   if (player.x < object_x && player_x > object.x) {
+//     // 플레이러아 오브젝트가 부딪칠시 플레이어의 hp - 오브젝트의 공격력
+//     if (player.y < object_y && player_y > object.y) {
+//       player.hp -= object.attack;
+//       invincibility = true;
+//       setTimeout(() => { invincibility = false; }, 1000);
+//     }
+//   }
+// }
 
 
 
 
 function gameOver(){
     cancelAnimationFrame(aniFrame);
+    cancelAnimationFrame(animatinoFrame);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     alert("게임종료");
 }

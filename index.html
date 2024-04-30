@@ -11,20 +11,20 @@
     <script src="./javascript/main.js"></script>
     <script src="./javascript/monster.js"></script>
     <script>
-       function onCrash(player, object) {
-  let player_x = player.x + player.width;
-  let object_x = object.x + object.width;
-  let player_y = player.y + player.height;
-  let object_y = object.y + object.height;
-  if (player.x < object_x && player_x > object.x) {
-    // 플레이러아 오브젝트가 부딪칠시 플레이어의 hp - 오브젝트의 공격력
-    if (player.y < object_y && player_y > object.y) {
-      player.hp -= object.attack;
-      invincibility = true;
-      setTimeout(() => { invincibility = false; }, 1000);
-    }
-  }
-}
+//        function onCrash(player, object) {
+//   let player_x = player.x + player.width;
+//   let object_x = object.x + object.width;
+//   let player_y = player.y + player.height;
+//   let object_y = object.y + object.height;
+//   if (player.x < object_x && player_x > object.x) {
+//     // 플레이러아 오브젝트가 부딪칠시 플레이어의 hp - 오브젝트의 공격력
+//     if (player.y < object_y && player_y > object.y) {
+//       player.hp -= object.attack;
+//       invincibility = true;
+//       setTimeout(() => { invincibility = false; }, 1000);
+//     }
+//   }
+// }
     </script>
 </body>
 </html>
