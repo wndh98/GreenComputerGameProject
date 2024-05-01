@@ -4,20 +4,15 @@
 // canvas.height = window.innerHeight; //화면 높이
 
 
-// let bulltInterval;
 
+// boss 클래스 생성 
 class Boss {
     constructor() {
-        // 넓이
         this.width = 200;
-        // 높이
         this.height = 200;
-        // 가로(x) 좌표
         this.x = 50;
-        //  세로(y) 좌표
         this.y = 50;
         this.hp = 10;
-        // 움직일때 속도
         this.speed = 5;
         this.attack = 1;
         this.direction_x = 1;
@@ -31,16 +26,17 @@ class Boss {
     }
     drawHP(idx) {
         ctx.fillStyle = "red";
-        ctx.fillRect(10 + idx * 40, 10, 30, 30);
+        ctx.fillRect(canvas.width - idx * 40, 10, 30, 30);
     }
 
-
+    // 보스의 움직임 구현 //
     moveBoss() {
 
         if (this.x > canvas.width - this.width) {
             this.direction_x = -1;
         } else if (this.x < 0) {
             this.direction_x = 1;
+            //패턴을 랜덤으로 만들고 33.3% 확률 로 보스가 내려가서 운석을 날림
         } else if (this.x == canvas.width / 2 - this.width / 2) {
             if (this.patten == 2) {
                 if (this.direction_x != 0) {
@@ -52,7 +48,6 @@ class Boss {
                 }
                 if (this.y > canvas.height / 2) {
                     boss.direction_y = -1;
-
                 }
                 clearInterval(bulltInterval);
                 this.direction_x = 0;
@@ -63,8 +58,6 @@ class Boss {
                     this.patten = 0;
                     bulltInterval = setInterval(createbossBullet, 300, boss);
                 }
-
-
             } else {
                 this.patten = Math.floor(Math.random() * 3);
             }
@@ -73,26 +66,25 @@ class Boss {
 
         this.x += this.direction_x * this.speed;
         this.y += this.direction_y * this.speed;
-        //this.y -=this.speed;
     }
 }
 // 적 생성 함수
 const enemies = [];
-function spawnEnemy() 
-{
-    
+function spawnEnemy() {
     return {
         x: Math.random() * (canvas.width - 30),
         y: 0,
         width: 30,
         height: 30,
+        attack: 1,
         color: "#FFA500",
         speed: Math.random() * 2 + 1
     };
-    
-}
 
+}
+//총알 배열 //
 let bulletList = []
+//총알 클래스 생성 
 class bossBullet {
     constructor(boss, speed = 10) {
         this.width = 10;
@@ -126,11 +118,7 @@ class bossBullet {
     }
 
 }
-
-
-
-
-
+//보스의 총알 생성 
 function createbossBullet(boss) {
     console.log(boss);
     let b = new bossBullet(boss);
@@ -139,52 +127,62 @@ function createbossBullet(boss) {
     bulletList.push(c);
 
 }
-
-
 let boss = new Boss();
-
-
 let bossBulletTime = 0;
+
+//보스 업데이트 
 function bossUpdate() {
     boss.draw();
     boss.moveBoss();
-    
-
+    for (let i = 0; i < boss.hp; i++) {
+        boss.drawHP(i);
+    }
+    if (onCrash(player, boss)) {
+        if (invincibility == false) {
+            onHit(player, boss);
+            invincibility = true;
+            setTimeout(function () { invincibility = false; }, 1000);
+        }
+    }
+    //총알 생성 및 총알과 플레이어의 충돌 onhit () 과정 
     bulletList.forEach((item, index) => {
         item.draw();
         item.move();
+        if (onCrash(player, item)) {
+            if (invincibility == false) {
+                onHit(player, item);
+                invincibility = true;
+                setTimeout(function () { invincibility = false; }, 1000);
+            }
+        }
     });
-
-    if (Math.random() < 0.02) {
+    //운석이 보스가 멈춰있는 패턴에서 만 랜덤으로 등장
+    if (Math.random() < 0.02 && boss.patten == 2) {
         enemies.push(spawnEnemy());
     }
-    
-
     
     enemies.forEach((enemy, index) => {
         ctx.fillStyle = enemy.color;
         ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-    
-        // 적 이동
         enemy.y += enemy.speed;
-        
-    
-        // 적이 캔버스 아래쪽으로 나갔을 때 제거
-        if (enemy.y > canvas.height) {
+        // 운석이 캔버스 아래쪽으로 나갔을 때 제거
+        if (enemy.y >= canvas.height) {
             enemies.splice(index, 1);
         }
-        
+        //운석과 플레이어의 충돌 onhit () 과정 
+        if (onCrash(player, enemy)) {
+            if (invincibility == false) {
+                onHit(player, enemy);
+                invincibility = true;
+                setTimeout(function () { invincibility = false; }, 1000);
+            }
+        }
+
     });
-    
-
     requestAnimationFrame(bossUpdate);
-   
-
 
 }
-
-// setInterval(createbossBullet,300,boss);
-
+//보스가 총알을 일정 시간동안 발사 
 bulltInterval = setInterval(createbossBullet, 300, boss);
 bossUpdate();
 
