@@ -3,6 +3,29 @@ const ctx = canvas.getContext("2d"); //2d
 canvas.width = 800; //화면 넓이
 canvas.height = window.innerHeight; //화면 높이
 
+class Player {
+    //플레이어 class 선언
+    constructor() {
+
+        this.width = 50; //wdith 50
+        this.height = 50; //height 50
+        this.x = canvas.width / 2 - this.width / 2; //x좌표
+        this.y = canvas.height - (this.height + 50); //y좌표
+        this.hp = 3; //player 체력
+        this.speed = 120; //속도
+        this.attack = 1; //공격력
+
+    }
+    draw() {
+        //플레이어 그리기 함수 나중에 이미지로 대체
+        ctx.fillStyle = "green";
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    drawHp(idx) {
+        //플레이어 그리기 함수 나중에 이미지로 대체
+        ctx.fillStyle = "pink";
+        ctx.fillRect(10 + idx * 40, 10, 30, 30);
+    }
 
 
 class Player {
@@ -33,7 +56,9 @@ class Player {
 
 
 class Bullet {
+
     constructor(player) {
+
         this.width = 10;
         this.height = 10;
         this.x = player.x + player.width / 2;
@@ -45,6 +70,7 @@ class Bullet {
         ctx.fillStyle = "red";
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
+
     move() {
         if (this.y < 0) {
             bulletArr.shift();
@@ -74,6 +100,7 @@ let invincibility = false;
 let aniFrame;
 
 function update(currentTime) {
+
     createDeltaTime();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -83,6 +110,7 @@ function update(currentTime) {
     }
     bulletArr.forEach((bullet) => {
         bullet.move();
+    
     });
 
     playerMove();
@@ -90,11 +118,9 @@ function update(currentTime) {
 
     aniFrame=requestAnimationFrame(update);
     if(player.hp<=0){gameOver();}
+
 }
-
 requestAnimationFrame(update);
-
-
 
 
 window.addEventListener("keydown", function (e) {
@@ -131,6 +157,7 @@ function playerMove() {
     }
     if (player.y + move_y > 0 && player.y + move_y < heightLimit) {
         player.y += move_y;
+
     }
 }
 
@@ -162,6 +189,7 @@ function gameOver(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     alert("게임종료");
 }
+
 
 
 
