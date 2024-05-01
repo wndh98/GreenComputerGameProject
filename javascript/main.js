@@ -53,28 +53,28 @@ function update(currentTime) {
   ////////////////////////////몬스터//////////////////////
 
   // 적군 업데이트 및 그리기
-  monsters.forEach((monster,idx) => {
-    monster.update(deltaTime);
-    monster.draw();
-    //충돌감지
-    if(onCrash(player, monster)){
-        onHit(monster,player)
-        //monster.onHit(player);
-        if(monster.hp<=0){
-            monsters.splice(idx,1);
-        }
-    }
+//   monsters.forEach((monster,idx) => {
+//     monster.update(deltaTime);
+//     monster.draw();
+//     //충돌감지
+//     if(onCrash(player, monster)){
+//         onHit(monster,player)
+//         //monster.onHit(player);
+//         if(monster.hp<=0){
+//             monsters.splice(idx,1);
+//         }
+//     }
 
-  });
-  // 총알 업데이트 및 그리기
+//   });
+//   // 총알 업데이트 및 그리기
 
-  updateMbullets(deltaTime);
-  mbullets.forEach((mbullet,idx)=>{
-    if(onCrash(player, mbullet)){
-        onHit(mbullet,player)
-        mbullets.splice(idx,1);
-    }
-  });
+//   updateMbullets(deltaTime);
+//   mbullets.forEach((mbullet,idx)=>{
+//     if(onCrash(player, mbullet)){
+//         onHit(mbullet,player)
+//         mbullets.splice(idx,1);
+//     }
+//   });
 
   ///////////////////////////몬스터//////////////////////
 
@@ -88,6 +88,6 @@ function update(currentTime) {
 
 //////////////////////////////함수 실행
 requestAnimationFrame(update);
-spawnMonster(); // 최초 적군 생성
-setInterval(spawnMonster, 1000); // 1초마다 적군 생성
+//spawnMonster(); // 최초 적군 생성
+//setInterval(spawnMonster, 1000); // 1초마다 적군 생성
 
