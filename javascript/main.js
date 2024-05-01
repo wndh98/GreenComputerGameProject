@@ -1,195 +1,93 @@
+////////////////////////////////////게임 화면 설정//////////////////////////////////
 const canvas = document.getElementById("canvas"); //캔버스
 const ctx = canvas.getContext("2d"); //2d
 canvas.width = 800; //화면 넓이
 canvas.height = window.innerHeight; //화면 높이
 
-class Player {
-    //플레이어 class 선언
-    constructor() {
-
-        this.width = 50; //wdith 50
-        this.height = 50; //height 50
-        this.x = canvas.width / 2 - this.width / 2; //x좌표
-        this.y = canvas.height - (this.height + 50); //y좌표
-        this.hp = 3; //player 체력
-        this.speed = 120; //속도
-        this.attack = 1; //공격력
-
-    }
-    draw() {
-        //플레이어 그리기 함수 나중에 이미지로 대체
-        ctx.fillStyle = "green";
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-    drawHp(idx) {
-        //플레이어 그리기 함수 나중에 이미지로 대체
-        ctx.fillStyle = "pink";
-        ctx.fillRect(10 + idx * 40, 10, 30, 30);
-    }
-
-
-class Player {
-    //플레이어 class 선언
-    constructor() {
-
-        this.width = 50; //wdith 50
-        this.height = 50; //height 50
-        this.x = canvas.width / 2 - this.width / 2; //x좌표
-        this.y = canvas.height - (this.height + 50); //y좌표
-        this.hp = 3; //player 체력
-        this.speed = 120; //속도
-        this.attack = 1; //공격력
-
-    }
-    draw() {
-        //플레이어 그리기 함수 나중에 이미지로 대체
-        ctx.fillStyle = "green";
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-    drawHp(i,margin) { // i는 갯수 margin 는 그림 사이의 거리
-        
-        ctx.fillStyle = "pink";
-        ctx.fillRect(10 + i * margin, 10, 30, 30);
-    }
-
-}
-
-
-class Bullet {
-
-    constructor(player) {
-
-        this.width = 10;
-        this.height = 10;
-        this.x = player.x + player.width / 2;
-        this.y = player.y - 10;
-        this.speed = 110;
-        this.attack = 1;
-    }
-    draw() {
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-
-    move() {
-        if (this.y < 0) {
-            bulletArr.shift();
-            return;
-        }
-        this.y -= this.speed * deltaTime;
-        this.draw();
-        if (!invincibility) {
-            onCrash(player, this);
-        }
-    }
-}
-
-
-
 /////////////////////////////////////변수 선언////////////////////////////////////////////////
-let player = new Player();
+////델타타임
 let deltaTime;
 let previousTime = performance.now();
-let moveDirection = "";
-let move_x = 0;
-let move_y = 0;
-let bulletArr = [];
-let widthLimit = canvas.width - player.width;
-let heightLimit = canvas.height - player.height;
-let invincibility = false;
+/////플레이어
+let player = new Player(); //플레이어 객체
+let move_x = 0; //플레이어 x축 이동방향
+let move_y = 0; // 플레이어 y축 이동방향
+let bulletArr = []; // 플레이어 탄환 관리
+let widthLimit = canvas.width - player.width; //플레이어 이동가능 가로 최대값
+let heightLimit = canvas.height - player.height; // 플레이어 이동가능 세로 최대값
+let invincibility = false; //무적시간
+////////몬스터///////////////////////////
+const mbullets = []; // 몬스터 총알 배열
+// 게임 루프에서 적군 생성 및 업데이트
+const monsters = []; // 적군 배열
+
+//requestanimationFrame 담을 변수
 let aniFrame;
 
+
+
+
+/********************************************실제반복실행****************************************************** */
 function update(currentTime) {
-
-    createDeltaTime();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    player.draw();
-    for (let i = 0; i < player.hp; i++) {
-        player.drawHp(i,40);
-    }
-    bulletArr.forEach((bullet) => {
-        bullet.move();
-    
+  createDeltaTime(); // 델타타임 생성
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // 화면 한번 클리어
+  ///////////////////////////플레이어//////////////////////
+  player.draw(); // 플레이어 그리기
+  for (let i = 0; i < player.hp; i++) {
+    player.drawHp(i, 40); // 플레이어 체력 그리기
+  }
+  bulletArr.forEach((bullet,i) => {
+    bullet.move(); // 플레이어 총알
+    monsters.forEach((monster,j) => {
+        if(onCrash(bullet, monster)){
+            onHit(monster,bullet);
+            bulletArr.splice(i,1);
+            if(monster.hp<=0){
+                monsters.splice(j,1);
+            }
+        }
     });
+  });
+  playerMove();
+  ///////////////////////////플레이어//////////////////////
+  ////////////////////////////몬스터//////////////////////
 
-    playerMove();
-
-
-    aniFrame=requestAnimationFrame(update);
-    if(player.hp<=0){gameOver();}
-
-}
-requestAnimationFrame(update);
-
-
-window.addEventListener("keydown", function (e) {
-    if (e.code == "ArrowLeft") {
-        move_x = -1 * player.speed * deltaTime;
-    } else if (e.code == "ArrowRight") {
-        move_x = 1 * player.speed * deltaTime;
-    } else if (e.code == "ArrowUp") {
-        move_y = -1 * player.speed * deltaTime;
-    } else if (e.code == "ArrowDown") {
-        move_y = 1 * player.speed * deltaTime;
-    }
-    if (e.code == "Space") {
-        let bullet = new Bullet(player);
-        bullet.draw();
-        bulletArr.push(bullet);
-    }
-});
-window.addEventListener("keyup", function (e) {
-    if (e.code == "ArrowLeft") {
-        move_x = 0;
-    } else if (e.code == "ArrowRight") {
-        move_x = 0;
-    } else if (e.code == "ArrowUp") {
-        move_y = 0;
-    } else if (e.code == "ArrowDown") {
-        move_y = 0;
-    }
-});
-
-function playerMove() {
-    if (player.x + move_x > 0 && player.x + move_x < widthLimit) {
-        player.x += move_x;
-    }
-    if (player.y + move_y > 0 && player.y + move_y < heightLimit) {
-        player.y += move_y;
-
-    }
-}
-
-function onCrash(player, object) {
-    let player_x = player.x + player.width;
-    let object_x = object.x + object.width;
-    let player_y = player.y + player.height;
-    let object_y = object.y + object.height;
-    if (player.x < object_x && player_x > object.x) {
-        // 플레이러아 오브젝트가 부딪칠시 플레이어의 hp - 오브젝트의 공격력
-        if (player.y < object_y && player_y > object.y) {
-            //코드를 짜면 부딪쳤을때 실행하는 코드
-            player.hp -= object.attack;
-            invincibility=true;
-            setTimeout(()=>{invincibility=false;},1000);
+  // 적군 업데이트 및 그리기
+  monsters.forEach((monster,idx) => {
+    monster.update(deltaTime);
+    monster.draw();
+    //충돌감지
+    if(onCrash(player, monster)){
+        onHit(monster,player)
+        //monster.onHit(player);
+        if(monster.hp<=0){
+            monsters.splice(idx,1);
         }
     }
+
+  });
+  // 총알 업데이트 및 그리기
+
+  updateMbullets(deltaTime);
+  mbullets.forEach((mbullet,idx)=>{
+    if(onCrash(player, mbullet)){
+        onHit(mbullet,player)
+        mbullets.splice(idx,1);
+    }
+  });
+
+  ///////////////////////////몬스터//////////////////////
+
+  aniFrame = requestAnimationFrame(update);
+  if (player.hp <= 0) {
+    gameOver();
+  }
 }
+/********************************************실제반복실행****************************************************** */
 
 
-function createDeltaTime(){
-    currentTime = performance.now();
-    deltaTime = (currentTime - previousTime) / 100;
-    previousTime = currentTime;
-}
-
-function gameOver(){
-    cancelAnimationFrame(aniFrame);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    alert("게임종료");
-}
-
-
-
+//////////////////////////////함수 실행
+requestAnimationFrame(update);
+spawnMonster(); // 최초 적군 생성
+setInterval(spawnMonster, 1000); // 1초마다 적군 생성
 
