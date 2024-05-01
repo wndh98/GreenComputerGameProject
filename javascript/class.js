@@ -120,3 +120,37 @@ class Mbullet {
     mbullets.splice(mbullets.indexOf(this), 1);
   }
 }
+
+class Item {
+  constructor(monster){
+    this.width = 50;
+    this.height = 50;
+    this.x = monster.x;
+    this.y = monster.y;
+    this.speed = 50;
+    this.hp = 1;
+    this.directionX = Math.random() < 0.5 ? -1 : 1; // 랜덤한 가로 방향 설정 (-1 또는 1)
+    this.directionY = Math.random() < 0.5 ? -1 : 1; // 랜덤한 세로 방향 설정 (-1 또는 1)
+  }
+
+  draw() {
+    ctx.fillStyle = "skyblue";
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }
+
+  update(deltaTime) {
+    // 가로 방향으로 이동
+    this.x += this.speed * this.directionX * deltaTime;
+    // 세로 방향으로 이동
+    this.y += this.speed * this.directionY * deltaTime;
+
+    // 가로 경계 검사
+    if (this.x < 0 || this.x + this.width > canvas.width) {
+      this.directionX *= -1; // 방향 반전
+    }
+    // 세로 경계 검사
+    if (this.y < 0 || this.y + this.height > canvas.height) {
+      this.directionY *= -1; // 방향 반전
+    }
+  }
+}

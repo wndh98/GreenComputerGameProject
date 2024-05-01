@@ -21,6 +21,9 @@ const mbullets = []; // 몬스터 총알 배열
 // 게임 루프에서 적군 생성 및 업데이트
 const monsters = []; // 적군 배열
 
+
+///////아이템///////////////////////
+// const
 //requestanimationFrame 담을 변수
 let aniFrame;
 
