@@ -84,6 +84,7 @@ window.addEventListener("keydown", function (e) {
         return true;
       }
     }
+    return false;
   }
   //데미지
   function onHit(objectF,objectS){
@@ -97,7 +98,6 @@ window.addEventListener("keydown", function (e) {
     currentTime = performance.now();
     deltaTime = (currentTime - previousTime) / 100;
     previousTime = currentTime;
-    console.log(deltaTime);
   }
   
   //게임종료
