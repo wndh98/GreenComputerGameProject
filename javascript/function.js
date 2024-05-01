@@ -75,6 +75,45 @@ window.addEventListener("keydown", function (e) {
       mbullet.draw();
     });
   }
+
+
+
+/////////////////////////보스
+function spawnEnemy() {
+  return {
+      x: Math.random() * (canvas.width - 30),
+      y: 0,
+      width: 30,
+      height: 30,
+      attack: 1,
+      color: "#FFA500",
+      speed: Math.random() * 2 + 1
+  };
+
+}
+
+//보스의 총알 생성 
+function createbossBullet(boss) {
+  let b = new bossBullet(boss);
+  let c = new bossBullet(boss, 1);
+  bulletList.push(b);
+  bulletList.push(c);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
   /////////////////////////////////////공통////////////////////////////////
   //충돌감지
