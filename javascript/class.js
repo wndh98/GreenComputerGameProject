@@ -21,8 +21,11 @@ class Player {
 
     ctx.fillStyle = "pink";
     ctx.fillRect(10 + i * margin, 10, 30, 30);
+    ctx.drawImage(img1,this.x,this.y)
   }
 }
+var img1 =new Image();
+img1.src='bullet.png'
 
 class Bullet {
   constructor(player) {
@@ -36,6 +39,7 @@ class Bullet {
   draw() {
     ctx.fillStyle = "red";
     ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.drawImage()
   }
 
   move() {
@@ -50,6 +54,7 @@ class Bullet {
     }
   }
 }
+
 
 
 ///////////몬스터
