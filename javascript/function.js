@@ -39,6 +39,12 @@ window.addEventListener("keydown", function (e) {
   }
   
   
+
+
+
+
+
+  
   ///////////////////몬스터 함수////////////////////////////
   //몬스터 총알 생성
   function spawnMbullet(monster) {
