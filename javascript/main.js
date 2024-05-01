@@ -20,15 +20,20 @@ let invincibility = false; //무적시간
 const mbullets = []; // 몬스터 총알 배열
 // 게임 루프에서 적군 생성 및 업데이트
 const monsters = []; // 적군 배열
+let monsterKill = 0;
+let monsterInterval;
+///////보스////////////////////////
+const enemies = [];
+let bulletList = [];
+let boss = new Boss();
+let bossBulletTime = 0;
+let bulltInterval;
+let bossApear=5;
 
-
-///////아이템///////////////////////
-// const
+//////////////아이템/////////////
+let item = new Item();
 //requestanimationFrame 담을 변수
 let aniFrame;
-
-
-
 
 /********************************************실제반복실행****************************************************** */
 function update(currentTime) {
@@ -39,58 +44,125 @@ function update(currentTime) {
   for (let i = 0; i < player.hp; i++) {
     player.drawHp(i, 40); // 플레이어 체력 그리기
   }
-  bulletArr.forEach((bullet,i) => {
+  bulletArr.forEach((bullet, i) => {
     bullet.move(); // 플레이어 총알
-    monsters.forEach((monster,j) => {
-        if(onCrash(bullet, monster)){
-            onHit(monster,bullet);
-            bulletArr.splice(i,1);
-            if(monster.hp<=0){
-                monsters.splice(j,1);
-            }
+
+    if (onCrash(bullet, boss) && monsterKill>=bossApear) {
+      onHit(boss, bullet);
+      bulletArr.splice(i, 1);
+    }
+    //몬스터와 충돌
+    monsters.forEach((monster, j) => {
+      if (onCrash(bullet, monster)) {
+        onHit(monster, bullet);
+        bulletArr.splice(i, 1);
+        if (monster.hp <= 0) {
+          monsters.splice(j, 1);
+          monsterKill++;
         }
+      }
     });
   });
   playerMove();
   ///////////////////////////플레이어//////////////////////
   ////////////////////////////몬스터//////////////////////
-
+  if(monsterKill<=bossApear){
   // 적군 업데이트 및 그리기
-  monsters.forEach((monster,idx) => {
+  monsters.forEach((monster, idx) => {
     monster.update(deltaTime);
     monster.draw();
     //충돌감지
-    if(onCrash(player, monster)){
-        onHit(monster,player)
-        //monster.onHit(player);
-        if(monster.hp<=0){
-            monsters.splice(idx,1);
-        }
+    if (onCrash(player, monster)) {
+      onHit(monster, player);
+      //monster.onHit(player);
+      if (monster.hp <= 0) {
+        monsters.splice(idx, 1);
+        monsterKill++;
+      }
     }
-
   });
   // 총알 업데이트 및 그리기
 
   updateMbullets(deltaTime);
-  mbullets.forEach((mbullet,idx)=>{
-    if(onCrash(player, mbullet)){
-        onHit(mbullet,player)
-        mbullets.splice(idx,1);
+  mbullets.forEach((mbullet, idx) => {
+    if (onCrash(player, mbullet)) {
+      onHit(mbullet, player);
+      mbullets.splice(idx, 1);
     }
   });
-
+  }else{
   ///////////////////////////몬스터//////////////////////
 
+  //////////////////////////보스////////////////////////
+  
+    if(!bulltInterval){
+      bulltInterval = setInterval(createbossBullet, 300, boss); // 보스 총알 생성
+    }
+    clearInterval(monsterInterval);
+    boss.draw();
+    boss.moveBoss();
+    for (let i = 0; i < boss.hp; i++) {
+      boss.drawHP(i);
+    }
+    if (onCrash(player, boss)) {
+      if (invincibility == false) {
+        onHit(player, boss);
+        invincibility = true;
+        setTimeout(function () {
+          invincibility = false;
+        }, 1000);
+      }
+    }
+    //총알 생성 및 총알과 플레이어의 충돌 onhit () 과정
+    bulletList.forEach((item, index) => {
+      item.draw();
+      item.move();
+      if (onCrash(player, item)) {
+        if (invincibility == false) {
+          onHit(player, item);
+          invincibility = true;
+          setTimeout(function () {
+            invincibility = false;
+          }, 1000);
+        }
+      }
+    });
+
+    //운석이 보스가 멈춰있는 패턴에서 만 랜덤으로 등장
+    if (Math.random() < 0.02 && boss.patten == 2) {
+      let bossEnemy = new BossEnemy();
+      enemies.push(bossEnemy);
+    }
+    enemies.forEach((enemy, index) => {
+      enemy.move(deltaTime);
+      enemy.draw();
+      // 운석이 캔버스 아래쪽으로 나갔을 때 제거
+      if (enemy.y >= canvas.height) {
+        enemies.splice(index, 1);
+      }
+      //운석과 플레이어의 충돌 onhit () 과정
+      if (onCrash(player, enemy)) {
+        if (invincibility == false) {
+          onHit(player, enemy);
+          invincibility = true;
+          setTimeout(function () {
+            invincibility = false;
+          }, 1000);
+        }
+      }
+    });
+  }
   aniFrame = requestAnimationFrame(update);
-  if (player.hp <= 0) {
+  if (player.hp <= 0 || boss.hp <= 0) {
     gameOver();
   }
 }
 /********************************************실제반복실행****************************************************** */
 
-
 //////////////////////////////함수 실행
 requestAnimationFrame(update);
-spawnMonster(); // 최초 적군 생성
-setInterval(spawnMonster, 1000); // 1초마다 적군 생성
 
+
+spawnMonster(); // 최초 적군 생성
+monsterInterval=setInterval(spawnMonster, 1000); // 1초마다 적군 생성
+// spawnItem();
