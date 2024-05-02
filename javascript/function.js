@@ -1,3 +1,5 @@
+
+
 ///////////////////////////플레이어////////////////////////
 //////////////// 플레이어 키입력
 window.addEventListener("keydown", function (e) {
@@ -149,6 +151,10 @@ function createbossBullet(boss) {
   function gameOver() {
     cancelAnimationFrame(aniFrame);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    alert("게임종료");
+    ctx.drawImage(gameoverImg, 0, 0, canvas.width, canvas.height);
+    
+      
+    
+    
   }
   
