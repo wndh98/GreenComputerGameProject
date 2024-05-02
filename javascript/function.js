@@ -101,11 +101,24 @@ function createbossBullet(boss) {
 
 }
 
-// function spawnItem(monster, idx){
-//   if(monster.hp <= 0){
-//     item.draw();
-//   }
-// }
+
+////////////////////아이템
+function spawnItem(x, y) {
+  // 아이템 생성 코드 작성
+  let item = new Item(x,y);
+  // 아이템을 배열에 추가
+  
+  items.push(item);
+   //console.log(item.type);
+}
+
+function updateItems(deltaTime) {
+  items.forEach((item) => {
+    item.update(deltaTime);
+    item.draw();
+  });
+}
+
 
 
 
@@ -137,6 +150,8 @@ function createbossBullet(boss) {
   }
   //데미지
   function onHit(objectF,objectS){
+    console.log(objectF);
+    console.log(objectS);
       objectF.hp-=objectS.attack;
       if(objectS.hp){
           objectS.hp-=objectF.attack;
