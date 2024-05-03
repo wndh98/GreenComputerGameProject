@@ -20,14 +20,13 @@ let invincibility = false; //무적시간
 const mbullets = []; // 몬스터 총알 배열
 // 게임 루프에서 적군 생성 및 업데이트
 const monsters = []; // 적군 배열
-let monsterKill = 0;
-let monsterInterval;
+let monsterKill = 0;  //몬스터 킬 카운트
+let monsterInterval;  //몬스터 소환 interval
 ///////보스////////////////////////
-const enemies = [];
-let bulletList = [];
-let boss = new Boss();
-let bossBulletTime = 0;
-let bulltInterval;
+const enemies = []; //보스가 소환하는 적 배열
+let bulletList = [];  //보스 총알 배열
+let boss = new Boss();  //보스 생성
+let bulltInterval;  // 보스 총알 생성 interval
 //requestanimationFrame 담을 변수
 let aniFrame;
 
