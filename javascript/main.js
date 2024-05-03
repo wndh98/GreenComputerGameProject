@@ -3,8 +3,18 @@ const canvas = document.getElementById("canvas"); //캔버스
 const ctx = canvas.getContext("2d"); //2d
 canvas.width = 800; //화면 넓이
 canvas.height = window.innerHeight; //화면 높이
+const backgroundImg = new Image();
+backgroundImg.src='./background.jpg';
+////////////////////////////////////게임 오버 화면 설정//////////////////////////////
+
+const gameoverImg = new Image();
+gameoverImg.src='./gameover.jpg'
+
 
 /////////////////////////////////////변수 선언////////////////////////////////////////////////
+//이미지 불러오기
+
+
 ////델타타임
 let deltaTime;
 let previousTime = performance.now();
@@ -20,26 +30,30 @@ let invincibility = false; //무적시간
 const mbullets = []; // 몬스터 총알 배열
 // 게임 루프에서 적군 생성 및 업데이트
 const monsters = []; // 적군 배열
-let monsterKill = 0;
-let monsterInterval;
+let monsterKill = 0;  //몬스터 킬 카운트
+let monsterInterval;  //몬스터 소환 interval
 ///////보스////////////////////////
 const enemies = [];
 let bulletList = [];
 let boss = new Boss();
 let bossBulletTime = 0;
 let bulltInterval;
+
 let bossApear = 5;
 
 //////////////아이템/////////////
 let item = new Item();
 let items = [];
+
 //requestanimationFrame 담을 변수
 let aniFrame;
 
 /********************************************실제반복실행****************************************************** */
 function update(currentTime) {
+ 
   createDeltaTime(); // 델타타임 생성
   ctx.clearRect(0, 0, canvas.width, canvas.height); // 화면 한번 클리어
+  ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
   ///////////////////////////플레이어//////////////////////
   player.draw(); // 플레이어 그리기
   for (let i = 0; i < player.hp; i++) {
@@ -47,6 +61,7 @@ function update(currentTime) {
   }
   bulletArr.forEach((bullet, i) => {
     bullet.move(); // 플레이어 총알
+
 
     if (onCrash(bullet, boss) && monsterKill >= bossApear) {
       onHit(boss, bullet);
@@ -68,6 +83,7 @@ function update(currentTime) {
   playerMove();
   ///////////////////////////플레이어//////////////////////
   ////////////////////////////몬스터//////////////////////
+
   if (monsterKill <= bossApear) {
     // 적군 업데이트 및 그리기
     monsters.forEach((monster, idx) => {
@@ -81,6 +97,7 @@ function update(currentTime) {
           monsters.splice(idx, 1);
           monsterKill++;
         }
+
       }
     });
     //////////////////아이템
@@ -113,6 +130,7 @@ function update(currentTime) {
     //////////////////////////보스////////////////////////
 
     if (!bulltInterval) {
+
       bulltInterval = setInterval(createbossBullet, 300, boss); // 보스 총알 생성
     }
     clearInterval(monsterInterval);
