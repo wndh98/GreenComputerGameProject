@@ -1,41 +1,53 @@
 
-///플레이어
+// ///플레이어
+let playerImg = new Image();
+playerImg.src='./player.png';
 class Player {
   //플레이어 class 선언
   constructor() {
-    this.width = 50; //wdith 50
-    this.height = 50; //height 50
+    this.width = 100; //wdith 50
+    this.height = 100; //height 50
     this.x = canvas.width / 2 - this.width / 2; //x좌표
     this.y = canvas.height - (this.height + 50); //y좌표
-    this.hp = 3; //player 체력
+    this.hp = 5; //player 체력
     this.speed = 120; //속도
     this.attack = 1; //공격력
   }
   draw() {
-    //플레이어 그리기 함수 나중에 이미지로 대체
-    ctx.fillStyle = "green";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+
+    ctx.drawImage(playerImg,this.x, this.y,this.width,this.height);
+      
+    
   }
   drawHp(i, margin) {
     // i는 갯수 margin 는 그림 사이의 거리
 
     ctx.fillStyle = "pink";
     ctx.fillRect(10 + i * margin, 10, 30, 30);
+    
   }
 }
 
+var img1 =new Image();
+img1.src='./bullet.png';
+
 class Bullet {
   constructor(player) {
-    this.width = 10;
-    this.height = 10;
+    this.width = 20;
+    this.height = 30;
     this.x = player.x + player.width / 2;
     this.y = player.y - 10;
     this.speed = 110;
     this.attack = 1;
+    this.img=new Image();
+    this.img.src='./bullet.png';
   }
   draw() {
-    ctx.fillStyle = "red";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    //ctx.fillStyle = "red";
+    // ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.drawImage(img1,this.x, this.y,this.width,this.height);
+
+
   }
 
   move() {
@@ -52,11 +64,14 @@ class Bullet {
 }
 
 
+
 ///////////몬스터
+var mosterImg =new Image();
+mosterImg.src='./monster.png';
 class Monster {
   constructor() {
-    this.width = 50;
-    this.height = 50;
+    this.width = 65;
+    this.height = 65;
     this.x = Math.random() * (canvas.width - this.width);
     this.y = -this.height / 2; // 화면 상단 중앙에 위치
     this.speed = Math.random() * 2 + 20;
@@ -67,8 +82,7 @@ class Monster {
   }
 
   draw() {
-    ctx.fillStyle = "yellow";
-    ctx.fillRect(this.x, this.y, this.width, this.height); // 몬스터를 캔버스에 그림
+    ctx.drawImage(mosterImg,this.x, this.y,this.width,this.height);
   }
 
   update(deltaTime) {
@@ -94,20 +108,20 @@ class Monster {
   }
 
 }
-
+var mbulletImg =new Image();
+mbulletImg.src='./mbullet.png';
 class Mbullet {
   constructor(monster) {
-    this.width = 10;
-    this.height = 10;
+    this.width = 20;
+    this.height = 25;
     this.x = monster.x + monster.width / 2; // 몬스터의 x 좌표 중심에 위치
     this.y = monster.y + monster.height; // 몬스터의 바로 아래에서 생성
-    this.speed = 100; // 총알의 속도
+    this.speed = 50; // 총알의 속도
     this.attack = 1;
   }
 
   draw() {
-    ctx.fillStyle = "gray";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.drawImage(mbulletImg,this.x, this.y,this.width,this.height);
   }
 
   update(deltaTime) {
@@ -129,9 +143,11 @@ class Mbullet {
 //보스
 
 // boss 클래스 생성 
+let bossImg = new Image();
+bossImg.src='./boss.png';
 class Boss {
   constructor() {
-      this.width = 200;
+      this.width = 300;
       this.height = 200;
       this.x = 50;
       this.y = 50;
@@ -143,13 +159,13 @@ class Boss {
       this.patten = 0;
   }
   draw() {
-      ctx.fillStyle = "red";
-      ctx.fillRect(this.x, this.y, this.width, this.height)
+    ctx.drawImage(bossImg,this.x, this.y,this.width,this.height);
 
   }
   drawHP(idx) {
       ctx.fillStyle = "red";
       ctx.fillRect(canvas.width - idx * 40, 10, 30, 30);
+      
   }
 
   // 보스의 움직임 구현 //
@@ -194,18 +210,19 @@ class Boss {
 
 
 //총알 클래스 생성 
+let bossBulletImg = new Image();
+bossBulletImg.src='./bossbullet.png';
 class bossBullet {
   constructor(boss, speed = 10) {
-      this.width = 10;
-      this.height = 10;
+      this.width = 30;
+      this.height = 30;
       this.x = boss.x + boss.width / 2;
       this.y = boss.y + boss.height + 10;
       this.speed = speed;
       this.attack = 1;
   }
   draw() {
-      ctx.fillStyle = "red";
-      ctx.fillRect(this.x, this.y, this.width, this.height);
+      ctx.drawImage(bossBulletImg,this.x, this.y,this.width,this.height);
       //boss 총알에 player hp 감소 
       if (
           player.x < this.x + this.width &&
@@ -228,22 +245,22 @@ class bossBullet {
 
 }
 
-
+let bossEnemyImg = new Image();
+bossEnemyImg.src='./bossenmey.png';
 class BossEnemy{
   constructor(){
     this.x= Math.random() * (canvas.width - 30);
     this.y= 0;
-    this.width =30;
-    this.height= 30;
+    this.width =50;
+    this.height= 50;
     this.attack= 1;
     this.color= "#FFA500";
 
     this.speed= 40 + Math.random() * 20;
   }
   draw() {
-    //플레이어 그리기 함수 나중에 이미지로 대체
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    
+    ctx.drawImage(bossEnemyImg,this.x, this.y,this.width,this.height);
   }
   move(deltaTime){
     this.y+=this.speed*deltaTime;
