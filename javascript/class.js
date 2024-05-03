@@ -1,7 +1,28 @@
-
-// ///플레이어
+//이미지
+//플렝이어
 let playerImg = new Image();
-playerImg.src='./player.png';
+playerImg.src='./images/player/player.png';
+
+let bulletImg =new Image();
+bulletImg.src='./images/player/bullet.png';
+//몬스터
+var mosterImg =new Image();
+mosterImg.src='./images/monster/monster.png';
+
+var mbulletImg =new Image();
+mbulletImg.src='./images/monster/mbullet.png';
+//보스
+let bossImg = new Image();
+bossImg.src='./images/boss/boss.png';
+
+let bossBulletImg = new Image();
+bossBulletImg.src='./images/boss/bossbullet.png';
+
+let bossEnemyImg = new Image();
+bossEnemyImg.src='./images/boss/bossenmey.png';
+// ///플레이어
+
+
 class Player {
   //플레이어 class 선언
   constructor() {
@@ -28,8 +49,6 @@ class Player {
   }
 }
 
-var img1 =new Image();
-img1.src='./bullet.png';
 
 class Bullet {
   constructor(player) {
@@ -39,13 +58,11 @@ class Bullet {
     this.y = player.y - 10;
     this.speed = 110;
     this.attack = 1;
-    this.img=new Image();
-    this.img.src='./bullet.png';
   }
   draw() {
     //ctx.fillStyle = "red";
     // ctx.fillRect(this.x, this.y, this.width, this.height);
-    ctx.drawImage(img1,this.x, this.y,this.width,this.height);
+    ctx.drawImage(bulletImg,this.x, this.y,this.width,this.height);
 
 
   }
@@ -66,8 +83,7 @@ class Bullet {
 
 
 ///////////몬스터
-var mosterImg =new Image();
-mosterImg.src='./monster.png';
+
 class Monster {
   constructor() {
     this.width = 65;
@@ -108,8 +124,7 @@ class Monster {
   }
 
 }
-var mbulletImg =new Image();
-mbulletImg.src='./mbullet.png';
+
 class Mbullet {
   constructor(monster) {
     this.width = 20;
@@ -143,8 +158,7 @@ class Mbullet {
 //보스
 
 // boss 클래스 생성 
-let bossImg = new Image();
-bossImg.src='./boss.png';
+
 class Boss {
   constructor() {
       this.width = 300;
@@ -210,8 +224,7 @@ class Boss {
 
 
 //총알 클래스 생성 
-let bossBulletImg = new Image();
-bossBulletImg.src='./bossbullet.png';
+
 class bossBullet {
   constructor(boss, speed = 10) {
       this.width = 30;
@@ -245,8 +258,7 @@ class bossBullet {
 
 }
 
-let bossEnemyImg = new Image();
-bossEnemyImg.src='./bossenmey.png';
+
 class BossEnemy{
   constructor(){
     this.x= Math.random() * (canvas.width - 30);

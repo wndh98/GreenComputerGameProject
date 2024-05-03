@@ -12,6 +12,9 @@ gameoverImg.src='./gameover.jpg'
 
 
 /////////////////////////////////////변수 선언////////////////////////////////////////////////
+//이미지 불러오기
+
+
 ////델타타임
 let deltaTime;
 let previousTime = performance.now();
@@ -27,8 +30,8 @@ let invincibility = false; //무적시간
 const mbullets = []; // 몬스터 총알 배열
 // 게임 루프에서 적군 생성 및 업데이트
 const monsters = []; // 적군 배열
-let monsterKill = 0;
-let monsterInterval;
+let monsterKill = 0;  //몬스터 킬 카운트
+let monsterInterval;  //몬스터 소환 interval
 ///////보스////////////////////////
 const enemies = [];
 let bulletList = [];
