@@ -20,6 +20,17 @@ bossBulletImg.src='./images/boss/bossbullet.png';
 
 let bossEnemyImg = new Image();
 bossEnemyImg.src='./images/boss/bossenmey.png';
+
+//오브젝트
+let objectImg=[];
+
+let hpImg=new Image();
+hpImg.src="./images/object/hpImg.png";
+objectImg.push(hpImg);
+
+let atkImg=new Image();
+atkImg.src="./images/object/atkImg.png";
+objectImg.push(atkImg);
 // ///플레이어
 
 
@@ -298,20 +309,19 @@ class BossEnemy{
 class Item {
   constructor(x, y) {
     this.type = parseInt(Math.random() * 2);
-    this.width = 50;
-    this.height = 50;
+    this.width = 15;
+    this.height = 15;
     this.x = x;
     this.y = y;
-    this.speed = 50;
+    this.speed = 30;
     this.hp = 1;
     this.directionX = Math.random() < 0.5 ? -1 : 1; // 랜덤한 가로 방향 설정 (-1 또는 1)
     this.directionY = Math.random() < 0.5 ? -1 : 1; // 랜덤한 세로 방향 설정 (-1 또는 1)
-    this.color=this.type==0?"white":"skyblue";
+    
   }
 
   draw() {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.drawImage(objectImg[this.type],0, 0,this.width,this.height,this.x,this.y,this.width,this.height);
   }
 
   update(deltaTime) {
