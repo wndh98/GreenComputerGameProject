@@ -63,7 +63,7 @@ window.addEventListener("keydown", function (e) {
   
   //몬스터 생성
   function spawnMonster() {
-    if (monsters.length < 10) {
+    if (monsters.length < 5) {
       // 몬스터 최대 생성 갯수가 10개 이하일 때만 새로운 몬스터 생성
       const monster = new Monster();
       monsters.push(monster);

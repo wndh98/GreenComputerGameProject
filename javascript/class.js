@@ -129,8 +129,6 @@ class Monster {
       this.speed = Math.random() * 10 + 20;
     }
 
-
-
   }
   itemSpawn() {
     if (this.hp <= 0) {
