@@ -38,7 +38,13 @@ let bulletList = [];
 let boss = new Boss();
 let bossBulletTime = 0;
 let bulltInterval;
-let bossApear=5;
+
+let bossApear = 5;
+
+//////////////아이템/////////////
+let item = new Item();
+let items = [];
+
 //requestanimationFrame 담을 변수
 let aniFrame;
 
@@ -56,7 +62,8 @@ function update(currentTime) {
   bulletArr.forEach((bullet, i) => {
     bullet.move(); // 플레이어 총알
 
-    if (onCrash(bullet, boss) && monsterKill>=bossApear) {
+
+    if (onCrash(bullet, boss) && monsterKill >= bossApear) {
       onHit(boss, bullet);
       bulletArr.splice(i, 1);
     }
@@ -66,6 +73,7 @@ function update(currentTime) {
         onHit(monster, bullet);
         bulletArr.splice(i, 1);
         if (monster.hp <= 0) {
+          monster.itemSpawn();
           monsters.splice(j, 1);
           monsterKill++;
         }
@@ -75,36 +83,54 @@ function update(currentTime) {
   playerMove();
   ///////////////////////////플레이어//////////////////////
   ////////////////////////////몬스터//////////////////////
-  if(monsterKill<=bossApear){
-  // 적군 업데이트 및 그리기
-  monsters.forEach((monster, idx) => {
-    monster.update(deltaTime);
-    monster.draw();
-    //충돌감지
-    if (onCrash(player, monster)) {
-      onHit(monster, player);
-      //monster.onHit(player);
-      if (monster.hp <= 0) {
-        monsters.splice(idx, 1);
-        monsterKill++;
+
+  if (monsterKill <= bossApear) {
+    // 적군 업데이트 및 그리기
+    monsters.forEach((monster, idx) => {
+      monster.update(deltaTime);
+      monster.draw();
+      //충돌감지
+      if (onCrash(player, monster)) {
+        onHit(monster, player);
+        //monster.onHit(player);
+        if (monster.hp <= 0) {
+          monsters.splice(idx, 1);
+          monsterKill++;
+        }
+
       }
-    }
-  });
-  // 총알 업데이트 및 그리기
+    });
+    //////////////////아이템
+    updateItems(deltaTime);
+    items.forEach((item, idx) => {
+      if (onCrash(player, item)) {
+        if (item.type == 0) {
+          player.hp += 1;
+          items.splice(idx, 1);
+        } else {
+          player.attack += 1;
+          console.log(player);
+          items.splice(idx, 1);
+        }
+      }
+    })
 
-  updateMbullets(deltaTime);
-  mbullets.forEach((mbullet, idx) => {
-    if (onCrash(player, mbullet)) {
-      onHit(mbullet, player);
-      mbullets.splice(idx, 1);
-    }
-  });
-  }
-  ///////////////////////////몬스터//////////////////////
+    // 총알 업데이트 및 그리기
 
-  //////////////////////////보스////////////////////////
-  else {
-    if(!bulltInterval){
+    updateMbullets(deltaTime);
+    mbullets.forEach((mbullet, idx) => {
+      if (onCrash(player, mbullet)) {
+        onHit(mbullet, player);
+        mbullets.splice(idx, 1);
+      }
+    });
+  } else {
+    ///////////////////////////몬스터//////////////////////
+
+    //////////////////////////보스////////////////////////
+
+    if (!bulltInterval) {
+
       bulltInterval = setInterval(createbossBullet, 300, boss); // 보스 총알 생성
     }
     clearInterval(monsterInterval);
@@ -122,7 +148,7 @@ function update(currentTime) {
         }, 1000);
       }
     }
-    //총알 생성 및 총알과 플레이어의 충돌 onhit () 과정
+    // 총알 생성 및 총알과 플레이어의 충돌 onhit () 과정
     bulletList.forEach((item, index) => {
       item.draw();
       item.move();
@@ -173,4 +199,5 @@ requestAnimationFrame(update);
 
 
 spawnMonster(); // 최초 적군 생성
-monsterInterval=setInterval(spawnMonster, 1000); // 1초마다 적군 생성
+monsterInterval = setInterval(spawnMonster, 1000); // 1초마다 적군 생성
+// spawnItem();

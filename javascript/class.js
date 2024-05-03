@@ -57,7 +57,7 @@ class Bullet {
     this.x = player.x + player.width / 2;
     this.y = player.y - 10;
     this.speed = 110;
-    this.attack = 1;
+    this.attack = player.attack;
   }
   draw() {
     //ctx.fillStyle = "red";
@@ -103,7 +103,7 @@ class Monster {
 
   update(deltaTime) {
     this.y += this.speed * deltaTime; // 적군을 아래로 이동
-    
+
     // 일정 시간마다 총알 발사
     const currentTime = performance.now();
     if (currentTime - this.lastShootTime > this.shootInterval) {
@@ -117,8 +117,22 @@ class Monster {
       this.x = Math.random() * (canvas.width - this.width);
       this.speed = Math.random() * 10 + 20;
     }
-  }
 
+
+
+  }
+  itemSpawn() {
+    if (this.hp <= 0) {
+
+      //console.log("몬스터의 HP가 0 이하입니다. 아이템 생성합니다.");
+      // 아이템 생성 코드 추가
+      spawnItem(this.x, this.y);
+      // 몬스터를 배열에서 제거
+      // monsters.splice(monsters.indexOf(this), 1);
+      // 몬스터가 사라졌으므로 아이템을 생성할 필요가 없음
+      return;
+    }
+  }
   shoot() {
     spawnMbullet(this);
   }
@@ -161,6 +175,7 @@ class Mbullet {
 
 class Boss {
   constructor() {
+
       this.width = 300;
       this.height = 200;
       this.x = 50;
@@ -185,40 +200,40 @@ class Boss {
   // 보스의 움직임 구현 //
   moveBoss() {
 
-      if (this.x > canvas.width - this.width) {
-          this.direction_x = -1;
-      } else if (this.x < 0) {
-          this.direction_x = 1;
-          //패턴을 랜덤으로 만들고 33.3% 확률 로 보스가 내려가서 운석을 날림
-      } else if (this.x == canvas.width / 2 - this.width / 2) {
-          if (this.patten == 2) {
-              if (this.direction_x != 0) {
+    if (this.x > canvas.width - this.width) {
+      this.direction_x = -1;
+    } else if (this.x < 0) {
+      this.direction_x = 1;
+      //패턴을 랜덤으로 만들고 33.3% 확률 로 보스가 내려가서 운석을 날림
+    } else if (this.x == canvas.width / 2 - this.width / 2) {
+      if (this.patten == 2) {
+        if (this.direction_x != 0) {
 
-                  setTimeout(function () {
-                      boss.direction_y = 1;
+          setTimeout(function () {
+            boss.direction_y = 1;
 
-                  }, 2000);
-              }
-              if (this.y > canvas.height / 2) {
-                  boss.direction_y = -1;
-              }
-              clearInterval(bulltInterval);
-              this.direction_x = 0;
-              if (this.direction_y == -1 && this.y == 50) {
-                  this.direction_y = 0;
-                  this.direction_x = Math.floor(Math.random() * 2) == 0 ? -1 : 1;
-                  console.log(this.direction_x);
-                  this.patten = 0;
-                  bulltInterval = setInterval(createbossBullet, 300, boss);
-              }
-          } else {
-              this.patten = Math.floor(Math.random() * 3);
-          }
+          }, 2000);
+        }
+        if (this.y > canvas.height / 2) {
+          boss.direction_y = -1;
+        }
+        clearInterval(bulltInterval);
+        this.direction_x = 0;
+        if (this.direction_y == -1 && this.y == 50) {
+          this.direction_y = 0;
+          this.direction_x = Math.floor(Math.random() * 2) == 0 ? -1 : 1;
+          console.log(this.direction_x);
+          this.patten = 0;
+          bulltInterval = setInterval(createbossBullet, 300, boss);
+        }
+      } else {
+        this.patten = Math.floor(Math.random() * 3);
       }
+    }
 
 
-      this.x += this.direction_x * this.speed;
-      this.y += this.direction_y * this.speed;
+    this.x += this.direction_x * this.speed;
+    this.y += this.direction_y * this.speed;
   }
 }
 
@@ -252,7 +267,7 @@ class bossBullet {
       }
   }
   move() {
-      this.y += this.speed;
+    this.y += this.speed;
 
   }
 
@@ -268,14 +283,51 @@ class BossEnemy{
     this.attack= 1;
     this.color= "#FFA500";
 
-    this.speed= 40 + Math.random() * 20;
+    this.speed = 40 + Math.random() * 20;
   }
   draw() {
     
     ctx.drawImage(bossEnemyImg,this.x, this.y,this.width,this.height);
   }
-  move(deltaTime){
-    this.y+=this.speed*deltaTime;
+  move(deltaTime) {
+    this.y += this.speed * deltaTime;
   }
-  
+
 }
+
+class Item {
+  constructor(x, y) {
+    this.type = parseInt(Math.random() * 2);
+    this.width = 50;
+    this.height = 50;
+    this.x = x;
+    this.y = y;
+    this.speed = 50;
+    this.hp = 1;
+    this.directionX = Math.random() < 0.5 ? -1 : 1; // 랜덤한 가로 방향 설정 (-1 또는 1)
+    this.directionY = Math.random() < 0.5 ? -1 : 1; // 랜덤한 세로 방향 설정 (-1 또는 1)
+    this.color=this.type==0?"white":"skyblue";
+  }
+
+  draw() {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }
+
+  update(deltaTime) {
+    // 가로 방향으로 이동
+    this.x += this.speed * this.directionX * deltaTime;
+    // 세로 방향으로 이동
+    this.y += this.speed * this.directionY * deltaTime;
+
+    // 가로 경계 검사
+    if (this.x < 0 || this.x + this.width > canvas.width) {
+      this.directionX *= -1; // 방향 반전
+    }
+    // 세로 경계 검사
+    if (this.y < 0 || this.y + this.height > canvas.height) {
+      this.directionY *= -1; // 방향 반전
+    }
+  }
+}
+
