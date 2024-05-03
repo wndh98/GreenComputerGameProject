@@ -100,20 +100,6 @@ function update(currentTime) {
 
       }
     });
-    //////////////////아이템
-    updateItems(deltaTime);
-    items.forEach((item, idx) => {
-      if (onCrash(player, item)) {
-        if (item.type == 0) {
-          player.hp += 1;
-          items.splice(idx, 1);
-        } else {
-          player.attack += 1;
-          console.log(player);
-          items.splice(idx, 1);
-        }
-      }
-    })
 
     // 총알 업데이트 및 그리기
 
@@ -128,7 +114,7 @@ function update(currentTime) {
     ///////////////////////////몬스터//////////////////////
 
     //////////////////////////보스////////////////////////
-
+    monsters.length=0;
     if (!bulltInterval) {
 
       bulltInterval = setInterval(createbossBullet, 300, boss); // 보스 총알 생성
@@ -187,6 +173,23 @@ function update(currentTime) {
       }
     });
   }
+    //////////////////아이템
+    updateItems(deltaTime);
+    items.forEach((item, idx) => {
+      if (onCrash(player, item)) {
+        if (item.type == 0) {
+          player.hp += 1;
+          items.splice(idx, 1);
+        } else {
+          player.attack += 1;
+          console.log(player);
+          items.splice(idx, 1);
+        }
+      }
+    })
+
+
+
   aniFrame = requestAnimationFrame(update);
   if (player.hp <= 0 || boss.hp <= 0) {
     gameOver();
